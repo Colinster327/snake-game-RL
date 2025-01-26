@@ -14,12 +14,13 @@ FPS = 8
 
 
 class SnakeGame:
-    def __init__(self, show_window=True, disable_input=False):
+    def __init__(self, show_window=True, disable_input=False, seed=None):
         pygame.init()
 
         if not show_window:
             os.environ['SDL_VIDEODRIVER'] = 'dummy'
 
+        self.rng = random.Random(seed)
         self.screen: pygame.Surface | None = None
         self.clock = pygame.time.Clock()
         self.snake = [(100, 100), (50, 100), (0, 100)]
@@ -29,6 +30,10 @@ class SnakeGame:
         self.show_window = show_window
         self.disable_input = disable_input or not show_window
         self.quit = False
+
+        self.was_apple_collision = False
+        self.was_wall_collision = False
+        self.was_body_collision = False
 
         if show_window:
             self.screen = pygame.display.set_mode((BOARD_WIDTH, BOARD_HEIGHT))
@@ -47,8 +52,10 @@ class SnakeGame:
         return len(self.snake)
 
     def get_next_apple(self):
-        pos = (random.randint(0, BOARD_TILE_WIDTH - 1) * SNAKE_SECTION_WIDTH,
-               random.randint(0, BOARD_TILE_HEIGHT - 1) * SNAKE_SECTION_WIDTH)
+        pos = (
+            self.rng.randint(0, BOARD_TILE_WIDTH - 1) * SNAKE_SECTION_WIDTH,
+            self.rng.randint(0, BOARD_TILE_HEIGHT - 1) * SNAKE_SECTION_WIDTH
+        )
 
         if pos in self.snake:
             return self.get_next_apple()
@@ -83,6 +90,10 @@ class SnakeGame:
         self.snake.insert(0, self.get_next_head_pos())
 
     def update(self):
+        self.was_apple_collision = False
+        self.was_wall_collision = False
+        self.was_body_collision = False
+
         if self.show_window:
             self.clock.tick(FPS)
         else:
@@ -109,10 +120,16 @@ class SnakeGame:
 
         self.advance_snake()
 
-        if self.wall_collision() or self.body_collision():
+        if self.wall_collision():
+            self.was_wall_collision = True
+            self.game_over = True
+
+        if self.body_collision():
+            self.was_body_collision = True
             self.game_over = True
 
         if self.apple_collision():
+            self.was_apple_collision = True
             self.reset_apple()
         else:
             self.snake.pop()
@@ -144,7 +161,13 @@ class SnakeGame:
 
         pygame.display.flip()
 
-    def reset(self):
+    def reset(self, seed=None):
+        self.rng = random.Random(seed)
+
+        self.was_apple_collision = False
+        self.was_wall_collision = False
+        self.was_body_collision = False
+
         self.game_over = False
         self.reset_snake()
         self.reset_apple()

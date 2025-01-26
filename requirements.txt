@@ -1,1 +1,6 @@
 pygame
+numpy
+stable-baselines3[extra]
+gymnasium[box2d]
+tensorflow
+wandb
