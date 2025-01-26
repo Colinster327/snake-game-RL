@@ -1,4 +1,3 @@
-import os
 import random
 from typing import Tuple
 
@@ -15,14 +14,9 @@ FPS = 8
 
 class SnakeGame:
     def __init__(self, show_window=True, disable_input=False, seed=None):
-        pygame.init()
-
-        if not show_window:
-            os.environ['SDL_VIDEODRIVER'] = 'dummy'
-
         self.rng = random.Random(seed)
         self.screen: pygame.Surface | None = None
-        self.clock = pygame.time.Clock()
+        self.clock: pygame.time.Clock | None = None
         self.snake = [(100, 100), (50, 100), (0, 100)]
         self.food = self.get_next_apple()
         self.direction = (1, 0)
@@ -36,7 +30,9 @@ class SnakeGame:
         self.was_body_collision = False
 
         if show_window:
+            pygame.init()
             self.screen = pygame.display.set_mode((BOARD_WIDTH, BOARD_HEIGHT))
+            self.clock = pygame.time.Clock()
             pygame.display.set_caption("Snake Game")
 
     def set_direction(self, direction: Tuple[int, int]):
@@ -96,24 +92,22 @@ class SnakeGame:
 
         if self.show_window:
             self.clock.tick(FPS)
-        else:
-            self.clock.tick(3000)
 
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                self.quit = True
-            elif event.type == pygame.KEYDOWN and not self.disable_input:
-                if not self.game_over:
-                    if event.key == pygame.K_UP:
-                        self.set_direction((0, -1))
-                    elif event.key == pygame.K_DOWN:
-                        self.set_direction((0, 1))
-                    elif event.key == pygame.K_LEFT:
-                        self.set_direction((-1, 0))
-                    elif event.key == pygame.K_RIGHT:
-                        self.set_direction((1, 0))
-                elif event.key == pygame.K_RETURN:
-                    self.reset()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    self.quit = True
+                elif event.type == pygame.KEYDOWN and not self.disable_input:
+                    if not self.game_over:
+                        if event.key == pygame.K_UP:
+                            self.set_direction((0, -1))
+                        elif event.key == pygame.K_DOWN:
+                            self.set_direction((0, 1))
+                        elif event.key == pygame.K_LEFT:
+                            self.set_direction((-1, 0))
+                        elif event.key == pygame.K_RIGHT:
+                            self.set_direction((1, 0))
+                    elif event.key == pygame.K_RETURN:
+                        self.reset()
 
         if self.game_over:
             return
@@ -158,6 +152,11 @@ class SnakeGame:
 
             pygame.draw.rect(self.screen, (255, 0, 0),
                              pygame.Rect(self.food[0], self.food[1], SNAKE_SECTION_WIDTH, SNAKE_SECTION_WIDTH))
+
+            font = pygame.font.Font(None, 36)
+            score_text = font.render(
+                f'Score: {self.get_snake_length() - 3}', True, (255, 255, 255))
+            self.screen.blit(score_text, (10, 10))
 
         pygame.display.flip()
 
