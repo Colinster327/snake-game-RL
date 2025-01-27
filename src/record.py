@@ -33,6 +33,6 @@ while not done:
     frames.append(frame)
     done = terminated or truncated
 
-imageio.mimsave(f'assets/snake.gif', frames, fps=FPS)
+imageio.mimsave(f'assets/snake.gif', frames, fps=FPS, loop=0)
 
 env.close()
