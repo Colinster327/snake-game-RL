@@ -26,14 +26,14 @@ env.reset()
 
 if len(sys.argv) > 1:
     model = PPO.load(
-        f'{models_dir}/{sys.argv[1]}.zip', env, verbose=1, tensorboard_log=log_dir)
+        f'{models_dir}/{sys.argv[1]}', env, verbose=1, tensorboard_log=log_dir)
 else:
     model = PPO('MlpPolicy', env, verbose=1, tensorboard_log=log_dir)
 
-TIMESTEPS = 100000
+TIMESTEPS = 10000
 
 start = 1 if len(sys.argv) <= 1 else int(sys.argv[1]) // TIMESTEPS + 1
-end = start + 30
+end = start + 300
 
 for i in range(start, end):
     model.learn(

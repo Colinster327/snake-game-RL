@@ -13,7 +13,7 @@ test:
 	python ./src/test.py $(ARGS)
 
 clean-models:
-	rm -rf models
+	rm -rf models/PPO
 
 clean-logs:
 	rm -rf wandb logs
