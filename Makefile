@@ -1,4 +1,4 @@
-.PHONY: run checkenv train test clean-models clean-logs
+.PHONY: run checkenv train test record clean-models clean-logs
 
 run:
 	python ./src/game.py
@@ -11,6 +11,9 @@ train:
 
 test:
 	python ./src/test.py $(ARGS)
+
+record:
+	python ./src/record.py $(ARGS)
 
 clean-models:
 	rm -rf models/PPO
