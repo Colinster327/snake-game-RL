@@ -1,4 +1,4 @@
-.PHONY: run checkenv train clean
+.PHONY: run checkenv train test clean-models clean-logs
 
 run:
 	python ./src/game.py
@@ -7,10 +7,13 @@ checkenv:
 	python ./src/checkenv.py
 
 train:
-	python ./src/train.py
+	python ./src/train.py $(ARGS)
 
 test:
-	python ./src/test.py
+	python ./src/test.py $(ARGS)
 
-clean:
-	rm -rf logs models wandb
+clean-models:
+	rm -rf models
+
+clean-logs:
+	rm -rf wandb logs

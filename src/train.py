@@ -1,9 +1,10 @@
 import os
+import sys
 
+import wandb
 from stable_baselines3 import PPO
 from wandb.integration.sb3 import WandbCallback
 
-import wandb
 from snake_env import SnakeEnv
 
 wandb.init(
@@ -23,10 +24,18 @@ if not os.path.exists(log_dir):
 env = SnakeEnv(show_window=False)
 env.reset()
 
-model = PPO('MlpPolicy', env, verbose=1, tensorboard_log=log_dir)
+if len(sys.argv) > 1:
+    model = PPO.load(
+        f'{models_dir}/{sys.argv[1]}.zip', env, verbose=1, tensorboard_log=log_dir)
+else:
+    model = PPO('MlpPolicy', env, verbose=1, tensorboard_log=log_dir)
 
 TIMESTEPS = 100000
-for i in range(1, 31):
+
+start = 1 if len(sys.argv) <= 1 else int(sys.argv[1]) // TIMESTEPS + 1
+end = start + 30
+
+for i in range(start, end):
     model.learn(
         total_timesteps=TIMESTEPS,
         progress_bar=True,

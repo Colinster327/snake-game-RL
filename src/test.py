@@ -1,9 +1,15 @@
+import sys
+
 from stable_baselines3 import PPO
 
 from snake_env import SnakeEnv
 
 models_dir = 'models/PPO'
-model_path = f'{models_dir}/3000000.zip'
+
+if len(sys.argv) > 1:
+    model_path = f'{models_dir}/{sys.argv[1]}.zip'
+else:
+    model_path = f'{models_dir}/3000000.zip'
 
 env = SnakeEnv(show_window=True, disable_input=True)
 env.reset()
