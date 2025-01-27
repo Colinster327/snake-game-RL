@@ -5,7 +5,7 @@ from gymnasium import spaces
 from snake_game import (BOARD_TILE_HEIGHT, BOARD_TILE_WIDTH,
                         SNAKE_SECTION_WIDTH, SnakeGame)
 
-SNAKE_LENGTH_GOAL = 30
+SNAKE_LENGTH_GOAL = BOARD_TILE_HEIGHT * BOARD_TILE_WIDTH
 
 
 class SnakeEnv(gym.Env):
@@ -120,6 +120,6 @@ class SnakeEnv(gym.Env):
         reward = ((250 - euclidean_distance_to_apple) + apple_reward) / 100
 
         if self.game.game_over:
-            self.reward = -100
+            reward = -100
 
         return reward

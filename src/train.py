@@ -1,10 +1,10 @@
 import os
 import sys
 
-import wandb
 from stable_baselines3 import PPO
 from wandb.integration.sb3 import WandbCallback
 
+import wandb
 from snake_env import SnakeEnv
 
 wandb.init(
