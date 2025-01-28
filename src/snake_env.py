@@ -14,9 +14,8 @@ class SnakeEnv(gym.Env):
         self.game = SnakeGame(show_window=show_window,
                               disable_input=disable_input, seed=seed)
         self.action_space = spaces.Discrete(4)
-        low = np.array([-1, -1, -1, -1, -1, -1, -
-                       1, -1, -1, -1], dtype=np.int32)
-        high = np.array([5, 5, 5, 5, 1, 1, 1, 1, 1, 1], dtype=np.int32)
+        low = np.array([-1] * 10, dtype=np.int32)
+        high = np.array([5] * 4 + [1] * 6, dtype=np.int32)
         self.observation_space = spaces.Box(low=low, high=high, dtype=np.int32)
 
     def step(self, action):

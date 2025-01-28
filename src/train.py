@@ -1,10 +1,10 @@
 import os
 import sys
 
+import wandb
 from stable_baselines3 import PPO
 from wandb.integration.sb3 import WandbCallback
 
-import wandb
 from snake_env import SnakeEnv
 
 wandb.init(
@@ -34,15 +34,17 @@ TIMESTEPS = 10000
 
 start = 1 if len(sys.argv) <= 1 else int(sys.argv[1]) // TIMESTEPS + 1
 end = start + 300
+restart_timesteps = True
 
 for i in range(start, end):
     model.learn(
         total_timesteps=TIMESTEPS,
         progress_bar=True,
-        reset_num_timesteps=False,
+        reset_num_timesteps=restart_timesteps,
         tb_log_name='PPO',
         callback=WandbCallback()
     )
     model.save(f'{models_dir}/{i * TIMESTEPS}')
+    restart_timesteps = False
 
 env.close()
