@@ -118,7 +118,9 @@ class SnakeEnv(gym.Env):
 
         reward = ((250 - euclidean_distance_to_apple) + apple_reward) / 100
 
-        if self.game.game_over:
+        if self.game.was_wall_collision:
             reward = -100
+        elif self.game.was_body_collision:
+            reward = -200
 
         return reward

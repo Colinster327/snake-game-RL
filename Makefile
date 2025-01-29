@@ -7,6 +7,7 @@ checkenv:
 	python ./src/checkenv.py
 
 train:
+	-@ulimit -n 4096
 	python ./src/train.py $(ARGS)
 
 test:
